@@ -5,15 +5,15 @@
 #include "realbuffer.h"
 //用于线程之间通讯,像网络协议一样格式化解析
 
-class thead_buffer
+class thread_buffer
 {
 public:
-    thead_buffer(int buffer_size,int data_size):cbuffer_(buffer_size),curLenght_(data_size)
+    thread_buffer(int buffer_size,int data_size):cbuffer_(buffer_size),curLenght_(data_size)
     {
         tempdata_ = new char[curLenght_];
     }
-    ~thead_buffer() {
-
+    ~thread_buffer() {
+        delete[] tempdata_;
     }
     //append
     bool append(int num) {
@@ -46,7 +46,7 @@ public:
         //长度
         append(pBuffer->GetLenght());
         //所有数据
-        append((char*)pBuffer, pBuffer->GetLenght());
+        return append((char*)pBuffer, pBuffer->GetLenght());
     }
     //get
     bool GetInt(int& value) {

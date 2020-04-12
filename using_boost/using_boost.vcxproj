@@ -161,10 +161,12 @@ xcopy/AFRSY "$(TargetPath)" "$(ProjectDir)..\bin\"
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActiveThread.cpp" />
     <ClCompile Include="timers.cpp" />
     <ClCompile Include="using_boost.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActiveThread.h" />
     <ClInclude Include="inc\circular_buffer.h" />
     <ClInclude Include="inc\realbuffer.h" />
     <ClInclude Include="inc\thread_buffer.h" />

@@ -24,6 +24,9 @@
     <ClCompile Include="timers.cpp">
       <Filter>methods</Filter>
     </ClCompile>
+    <ClCompile Include="ActiveThread.cpp">
+      <Filter>methods</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="timers.h">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="inc\realbuffer.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ActiveThread.h">
+      <Filter>methods</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
