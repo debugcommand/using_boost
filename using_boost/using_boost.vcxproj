@@ -165,7 +165,9 @@ xcopy/AFRSY "$(TargetPath)" "$(ProjectDir)..\bin\"
     <ClCompile Include="using_boost.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\circularbuffer.h" />
+    <ClInclude Include="inc\circular_buffer.h" />
+    <ClInclude Include="inc\realbuffer.h" />
+    <ClInclude Include="inc\thread_buffer.h" />
     <ClInclude Include="timers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -26,11 +26,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\circularbuffer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="timers.h">
       <Filter>methods</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\thread_buffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\circular_buffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\realbuffer.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
