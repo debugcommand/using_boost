@@ -17,6 +17,8 @@
 #include <boost/asio/steady_timer.hpp >
 #include <boost/asio/system_timer.hpp >
 
+const float timer_version = 1.0f;//标记计时器的版本
+
 enum eTType
 {
     eTType_sdy = 0,
