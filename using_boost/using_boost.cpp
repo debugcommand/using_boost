@@ -1,14 +1,11 @@
-﻿// using_boost.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
-
-#include <iostream>
+﻿#include "timers.h"
 #if defined(WIN32)
 #include <windows.h>
 #endif
 
 int main(int argc, char** argv)
 {
-#ifdef DEBUG
+#ifdef _DEBUG
     system("pause");
 #endif // DEBUG
     //commandline///////////////////
@@ -16,12 +13,13 @@ int main(int argc, char** argv)
         return idx < argc ? argv[idx] : NULL;
     };
     const char* platform = GetCmdParam(1);
-#if 0
-    if (strcmp(platform, "-c") == 0)
-    {//cleint
-        test_tcpclient* pTClient = new test_tcpclient();
-        pTClient->RunClient(GetCmdParam(2), atoi(GetCmdParam(3)), atoi(GetCmdParam(4)));
+    if (strcmp(platform, "-t") == 0)
+    {//timers
+        timers* pTimer = timers::create((eTType)atoi(GetCmdParam(2)));
+        pTimer->run(atoi(GetCmdParam(3)), atoi(GetCmdParam(4)));
     }
+#if 0
+
     else if (strcmp(platform, "-s") == 0) {//sever
         test_tcpserver* pTServer = new test_tcpserver();
         pTServer->RunServer(atoi(GetCmdParam(2)));

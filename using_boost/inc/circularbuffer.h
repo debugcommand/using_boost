@@ -1,9 +1,4 @@
-﻿/***************************************
-* @file     circularbuffer.h
-* @brief    环形缓冲区
-* @details  原作者地址：http://blog.csdn.net/devday/article/details/5258697
-****************************************/
-#ifndef _CIRCULAR_BUFFER_H_
+﻿#ifndef _CIRCULAR_BUFFER_H_
 #define _CIRCULAR_BUFFER_H_
 #include <assert.h>
 #include <memory.h>

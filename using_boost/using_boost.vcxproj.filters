@@ -21,10 +21,16 @@
     <ClCompile Include="using_boost.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="timers.cpp">
+      <Filter>methods</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\circularbuffer.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="timers.h">
+      <Filter>methods</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
