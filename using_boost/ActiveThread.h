@@ -20,7 +20,7 @@ public:
     void			SetCallBack(Callback cb);
     void			SetThreadStartCallback(BeginInThreadCallback begin_cb);
     void			Send(buffer_base* pBuffer);
-    void            Handler(buffer_base*& pBuffer);
+    void			Send(const char* pData,int un32Length);
 private:
     BeginInThreadCallback                  begin_cb_;
     boost::thread	                       thread_;
@@ -30,5 +30,4 @@ private:
     thread_buffer                          thread_buffer_;
     Callback                               callback_;
 };
-extern void MainTest();
 #endif

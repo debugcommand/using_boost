@@ -1,5 +1,5 @@
 ﻿#include "timers.h"
-#include "ActiveThread.h"
+#include "LogicActor.h"
 #if defined(WIN32)
 #include <windows.h>
 #endif
@@ -21,7 +21,12 @@ int main(int argc, char** argv)
     }
     else if (strcmp(platform, "-at") == 0)
     {
-        MainTest();
+        LogicActor* pActor = new LogicActor();
+        pActor->Start();
+        for (; ;)
+        {
+            Sleep(1);
+        }
     }
     return 0;
 }

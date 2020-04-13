@@ -162,6 +162,7 @@ xcopy/AFRSY "$(TargetPath)" "$(ProjectDir)..\bin\"
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActiveThread.cpp" />
+    <ClCompile Include="LogicActor.cpp" />
     <ClCompile Include="timers.cpp" />
     <ClCompile Include="using_boost.cpp" />
   </ItemGroup>
@@ -170,6 +171,7 @@ xcopy/AFRSY "$(TargetPath)" "$(ProjectDir)..\bin\"
     <ClInclude Include="inc\circular_buffer.h" />
     <ClInclude Include="inc\realbuffer.h" />
     <ClInclude Include="inc\thread_buffer.h" />
+    <ClInclude Include="LogicActor.h" />
     <ClInclude Include="timers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

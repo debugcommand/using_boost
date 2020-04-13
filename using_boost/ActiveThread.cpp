@@ -35,9 +35,17 @@ void ActiveThread::SetCallBack(Callback cb)
 
 void ActiveThread::Send(buffer_base* pBuffer)
 {
+    boost::mutex::scoped_lock lock(mutex_);
     thread_buffer_.append(pBuffer);
 }
 
+void ActiveThread::Send(const char* pData, int n32Length)
+{
+    boost::mutex::scoped_lock lock(mutex_);
+    thread_buffer_.append(n32Length);
+    thread_buffer_.append(pData, n32Length);
+}
+ 
 void ActiveThread::Run()
 {
     if (begin_cb_) {
@@ -64,20 +72,4 @@ ActiveThread*	ActiveThread::Create(Callback aCallBack)
     ActiveThread* aPtr = new ActiveThread();
     aPtr->callback_ = aCallBack;    
     return aPtr;
-}
-
-void ActiveThread::Handler(buffer_base*& pBuffer)
-{
-
-}
-
-void MainTest()
-{
-    ActiveThread* pAT = ActiveThread::Create(nullptr);
-    pAT->SetCallBack(std::bind(&ActiveThread::Handler, pAT, std::placeholders::_1) );
-    pAT->Start();
-    while (true)
-    {
-        Sleep(1);
-    }
 }

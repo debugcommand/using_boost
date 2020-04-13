@@ -16,6 +16,9 @@
     <Filter Include="methods">
       <UniqueIdentifier>{89ff64f4-ff3b-4638-a0d0-727ff41aebd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{e4a53c06-1aea-4345-af5c-f989c38718a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="using_boost.cpp">
@@ -27,22 +30,28 @@
     <ClCompile Include="ActiveThread.cpp">
       <Filter>methods</Filter>
     </ClCompile>
+    <ClCompile Include="LogicActor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="timers.h">
       <Filter>methods</Filter>
     </ClInclude>
-    <ClInclude Include="inc\thread_buffer.h">
+    <ClInclude Include="ActiveThread.h">
+      <Filter>methods</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicActor.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="inc\circular_buffer.h">
-      <Filter>头文件</Filter>
+      <Filter>inc</Filter>
     </ClInclude>
     <ClInclude Include="inc\realbuffer.h">
-      <Filter>头文件</Filter>
+      <Filter>inc</Filter>
     </ClInclude>
-    <ClInclude Include="ActiveThread.h">
-      <Filter>methods</Filter>
+    <ClInclude Include="inc\thread_buffer.h">
+      <Filter>inc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
