@@ -16,8 +16,23 @@ int main(int argc, char** argv)
     const char* platform = GetCmdParam(1);
     if (strcmp(platform, "-t") == 0)
     {//timers
-        timers* pTimer = timers::create((eTType)atoi(GetCmdParam(2)));
-        pTimer->run(atoi(GetCmdParam(3)), atoi(GetCmdParam(4)));
+        timers* pTimer = timers::create();
+        pTimer->test_run();
+        /*show_current_time("system:",eTType_sys);
+        Sleep(1000);
+        show_current_time("system:", eTType_sys);
+        Sleep(1000);
+        show_current_time("steady:",eTType_sdy);
+        Sleep(1000);
+        show_current_time("steady:", eTType_sdy);
+        Sleep(1000);
+        show_current_time("hr:",eTType_hr);
+        Sleep(1000);
+        show_current_time("hr:", eTType_hr);
+        Sleep(1000);
+        show_current_time("dl:", eTType_dline);
+        Sleep(1000);
+        show_current_time("dl:", eTType_dline);       */ 
     }
     else if (strcmp(platform, "-at") == 0)
     {

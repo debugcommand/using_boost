@@ -4,6 +4,7 @@
 #include <boost/thread.hpp>
 #include <boost/atomic.hpp>
 #include "inc\thread_buffer.h"
+#include "timers.h"
 
 typedef std::function<void()> BeginInThreadCallback;
 typedef std::function<void(buffer_base*&)> Callback;
@@ -21,6 +22,7 @@ public:
     void			SetThreadStartCallback(BeginInThreadCallback begin_cb);
     void			Send(buffer_base* pBuffer);
     void			Send(const char* pData,int un32Length);
+    void            AddTimer(HeartbeatCallback pHeartbeatCallback, __int64 interval, eTType type, bool ifpersist);
 private:
     BeginInThreadCallback                  begin_cb_;
     boost::thread	                       thread_;
@@ -29,5 +31,6 @@ private:
     boost::atomic<int>		               working_num_;
     thread_buffer                          thread_buffer_;
     Callback                               callback_;
+    timers*                                timers_;
 };
 #endif

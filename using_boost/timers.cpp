@@ -5,6 +5,41 @@
 
 const int span_time = 5000; //º‰∏Ù ±º‰ ms
 static boost::posix_time::ptime sInitTime(boost::posix_time::microsec_clock::universal_time());
+
+__int64 now_time(eTType _type) {
+    switch (_type)
+    {
+    case eTType::eTType_sdy:
+    {
+        //auto time = std::chrono::steady_clock::now();
+        //return time.time_since_epoch().count();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    }
+    break;
+    case eTType::eTType_sys:
+    {
+        /*auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        return time;*/
+        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    }
+    break;
+    case eTType::eTType_hr:
+    {
+        //auto time = std::chrono::high_resolution_clock::now();
+        //return time.time_since_epoch().count();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+    }
+    break;
+    case eTType::eTType_dline:
+    {
+        auto time = boost::posix_time::microsec_clock::universal_time();
+        return (time - sInitTime).total_milliseconds();
+    }
+    break;
+    }
+    return 0;
+}
+
 void show_current_time(const char* _str, eTType _type)
 {
     /*auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -13,200 +48,205 @@ void show_current_time(const char* _str, eTType _type)
     {
     case eTType::eTType_sdy:
     {
-        auto time = std::chrono::steady_clock::now();
-        std::cout << _str << ":" << time.time_since_epoch().count() << "\n";
+        std::cout << _str << ":" << now_time(_type) << "\n";
     }
     break;
     case eTType::eTType_sys:
     {
-        auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        std::cout << _str << ":"<< time << "\n";
+        std::cout << _str << ":"<< now_time(_type) << "\n";
     }
     break;
     case eTType::eTType_hr:
     {
-        auto time = std::chrono::high_resolution_clock::now();
-        std::cout << _str << ":" << time.time_since_epoch().count() << "\n";
+        std::cout << _str << ":" << now_time(_type) << "\n";
     }
     break;
     case eTType::eTType_dline:
     {
-        auto time = boost::posix_time::microsec_clock::universal_time();
-        std::cout << _str << ":" << (time- sInitTime).total_milliseconds() << "\n";
+        std::cout << _str << ":" << now_time(_type) << "\n";
     }
     break;
     }
 }
 
-timers::timers(eTType type) : count_(0), ttype_(type), async_(true)
+timers::timers()
 {
-    sdy_timer_ = nullptr;
-    sys_timer_ = nullptr;
-    hr_timer_ = nullptr;
-    deadline_timer_ = nullptr;
+    mapActiveTimers.clear();
+    activeTimer_idx_ = 0;
 }
 
 timers::~timers()
 {
-    if (sdy_timer_)
+    for (auto itr = mapActiveTimers.begin(); itr != mapActiveTimers.end(); itr++)
     {
-        delete sdy_timer_;
+        delete itr->second;
     }
-    if (sys_timer_)
-    {
-        delete sys_timer_;
-    }
-    if (hr_timer_)
-    {
-        delete hr_timer_;
-    }
-    if (deadline_timer_) {
-        delete deadline_timer_;
-    }
+    mapActiveTimers.clear();
 }
 
-timers* timers::create(eTType _type) {
-    std::cout << "timer type:" << _type <<  std::endl;
-    return new timers(_type);
-}
-
-void timers::setcb(timer_cb _cb)
-{
+timers* timers::create() {
+    return new timers();
 }
 
 void timers::stop() {
     delete this;
 }
 
-bool timers::addtimer()
+bool timers::addtimer(HeartbeatCallback pHeartbeatCallback, __int64 interval, eTType type, bool ifpersist, bool forcerun)
 {
-    switch (ttype_)
+    ActiveTimer* at_ = new ActiveTimer();
+    at_->interval_ = interval;
+    at_->ttype_    = type;
+    at_->hb_cb_    = pHeartbeatCallback;
+    at_->persist_  = ifpersist;
+    at_->index_ = activeTimer_idx_++;
+    at_->timers_ = this;
+    switch (type)
     {
     case eTType::eTType_sdy:
-    {        
-        if (!sdy_timer_)
-            sdy_timer_ = new boost::asio::steady_timer(io_);
-        sdy_timer_->expires_from_now(std::chrono::milliseconds(span_time));
-        show_current_time("begin wait:", ttype_);
-        sdy_timer_->async_wait(std::bind(&timers::timeout, this));
+    {
+        at_->timer_.sdy_timer_ = new boost::asio::steady_timer(io_);
+        /* if (!sdy_timer_)
+             sdy_timer_ = new boost::asio::steady_timer(io_);
+         sdy_timer_->expires_from_now(std::chrono::milliseconds(span_time));
+         show_current_time("begin wait:", ttype_);
+         sdy_timer_->async_wait(std::bind(&timers::timeout, this));*/
     }
     break;
     case eTType::eTType_sys:
     {
-        if (!sys_timer_)
+        at_->timer_.sys_timer_ = new boost::asio::system_timer(io_);
+        /*if (!sys_timer_)
             sys_timer_ = new boost::asio::system_timer(io_);
         sys_timer_->expires_from_now(std::chrono::milliseconds(span_time));
         show_current_time("begin wait:", ttype_);
-        sys_timer_->async_wait(std::bind(&timers::timeout, this));
+        sys_timer_->async_wait(std::bind(&timers::timeout, this));*/
     }
     break;
     case eTType::eTType_hr:
     {
-        if (!hr_timer_)
-            hr_timer_ = new boost::asio::high_resolution_timer(io_);        
+        at_->timer_.hr_timer_ = new boost::asio::high_resolution_timer(io_);
+        /*if (!hr_timer_)
+            hr_timer_ = new boost::asio::high_resolution_timer(io_);
         hr_timer_->expires_from_now(std::chrono::milliseconds(span_time));
         show_current_time("begin wait:", ttype_);
-        hr_timer_->async_wait(std::bind(&timers::timeout, this));
+        hr_timer_->async_wait(std::bind(&timers::timeout, this));*/
     }
     break;
     case eTType::eTType_dline:
     {
-        if (!deadline_timer_)
+        at_->timer_.deadline_timer_ = new boost::asio::deadline_timer(io_);
+        /*if (!deadline_timer_)
             deadline_timer_ = new boost::asio::deadline_timer(io_);
         deadline_timer_->expires_from_now(boost::posix_time::seconds(span_time));
         show_current_time("begin wait:", ttype_);
-        deadline_timer_->async_wait(std::bind(&timers::timeout, this));
+        deadline_timer_->async_wait(std::bind(&timers::timeout, this));*/
     }
     break;
     default:
-        std::cout << "Final begin!\n" << std::endl;
+        std::cout << "error! \n" << std::endl;
         return false;
+    }
+    mapActiveTimers[at_->index_] = at_;
+    if (forcerun)
+    {
+        runtimer(at_,now_time(at_->ttype_));
     }
     return true;
 }
 
-void timers::timeout() {
-    show_current_time("end   wait:", ttype_);
-    if (count_ < 100) {
-        if (async_)
-        {
-            addtimer();
-        }
-    }
-    else
-    {
-        std::cout << "stop! \n";
-        stop();
-    }
-}
-
-void timers::runtimer()
+void timers::removetimer(int index)
 {
-    if (async_)
+    mapActiveTimers.erase(index);
+}
+
+void timers::ActiveTimer::timeout()
+{
+    __int64 _now = now_time(ttype_);
+    __int64 span = _now - start_;
+
+    hb_cb_(_now, span);
+
+    if (persist_)
     {
-        addtimer();
-        io_.run();
+        running_ = false;
+        timers_->runtimer(this, _now);
     }
     else
     {
-        switch (ttype_)
-        {
-        case eTType::eTType_sdy:
-        {
-            if (!sdy_timer_)
-                sdy_timer_ = new boost::asio::steady_timer(io_);
-            sdy_timer_->expires_from_now(std::chrono::milliseconds(span_time));
-            show_current_time("begin wait:", ttype_);
-            sdy_timer_->wait();
+        if (close_cb_) {
+            close_cb_();
         }
-        break;
-        case eTType::eTType_sys:
-        {
-            if (!sys_timer_)
-                sys_timer_ = new boost::asio::system_timer(io_);
-            sys_timer_->expires_from_now(std::chrono::milliseconds(span_time));
-            show_current_time("begin wait:", ttype_);
-            sys_timer_->wait();            
-        }
-        break;
-        case eTType::eTType_hr:
-        {
-            if (!hr_timer_)
-                hr_timer_ = new boost::asio::high_resolution_timer(io_);
-            hr_timer_->expires_from_now(std::chrono::milliseconds(span_time));
-            show_current_time("begin wait:", ttype_);
-            hr_timer_->wait();
-        }
-        break;
-        case eTType::eTType_dline:
-        {
-            if (!deadline_timer_)
-                deadline_timer_ = new boost::asio::deadline_timer(io_);
-            deadline_timer_->expires_from_now(boost::posix_time::seconds(span_time));
-            show_current_time("begin wait:", ttype_);
-            deadline_timer_->wait();
-        }
-        break;
-        }
-        timeout();        
+        timers_->removetimer(index_);
     }
 }
 
-void timers::run(bool async, bool mult_) {
-    std::cout << "async_:" << async << "-mult_:" << mult_ << std::endl;
-    async_ = async;
-    if(mult_)
-    {
-        std::thread t;
-        t = std::thread(std::mem_fn(&timers::runtimer), this);
-        t.detach();
+void timers::runtimer(ActiveTimer* pATimer, __int64 now_time_)
+{
+    if (pATimer->running_){
+        return;
     }
-    for (;;)
+    switch (pATimer->ttype_)
     {
-        if (!mult_)
-        {
-            runtimer();
-        }
+    case eTType::eTType_sdy:
+    {
+        pATimer->timer_.sdy_timer_->expires_from_now(std::chrono::milliseconds(pATimer->interval_));
+        pATimer->timer_.sdy_timer_->async_wait(std::bind(&timers::ActiveTimer::timeout, pATimer));
+    }
+    break;
+    case eTType::eTType_sys:
+    {
+        pATimer->timer_.sys_timer_->expires_from_now(std::chrono::milliseconds(pATimer->interval_));
+        pATimer->timer_.sys_timer_->async_wait(std::bind(&timers::ActiveTimer::timeout, pATimer));
+    }
+    break;
+    case eTType::eTType_hr:
+    {
+        pATimer->timer_.hr_timer_->expires_from_now(std::chrono::milliseconds(pATimer->interval_));
+        pATimer->timer_.hr_timer_->async_wait(std::bind(&timers::ActiveTimer::timeout, pATimer));
+    }
+    break;
+    case eTType::eTType_dline:
+    {
+        pATimer->timer_.deadline_timer_->expires_from_now(boost::posix_time::milliseconds(pATimer->interval_));
+        pATimer->timer_.deadline_timer_->async_wait(std::bind(&timers::ActiveTimer::timeout, pATimer));
+    }
+    break;
+    }
+    pATimer->start_ = now_time_;
+    pATimer->running_ = true;
+}
+
+void timers::timeout()
+{
+    std::cout << "timeout" << std::endl;
+}
+void timers::tout(__int64 nTime, __int64 sTime) {
+    std::cout << "timeout:" << nTime<<"-"<< sTime<< std::endl;
+}
+
+
+void timers::start()
+{
+    for (auto itr=mapActiveTimers.begin();itr != mapActiveTimers.end();++itr)
+    {
+        runtimer((itr->second), now_time(itr->second->ttype_));
+    }
+}
+
+void timers::run() {
+    io_.run();
+}
+
+void timers::test_run() {
+    //boost::asio::deadline_timer* deadline_timer_ = new boost::asio::deadline_timer(io_);
+    //deadline_timer_->expires_from_now(boost::posix_time::millisec(span_time));
+    //show_current_time("begin wait:", eTType_dline);
+    //deadline_timer_->async_wait(std::bind(&timers::timeout, this));
+    addtimer(std::bind(&timers::tout, this, std::placeholders::_1, std::placeholders::_2), 3000, eTType_dline, true,true);
+    while (1)
+    {
+        io_.run();
         Sleep(1);
     }
 }

@@ -8,49 +8,96 @@
 *high_resolution_timer - 当前系统时钟周期最短的时钟,没搞清楚与steady_timer到底有什么差别
 *steady_timer - 不会被调整的单调时钟-用在需要得到时间间隔，并且这个时间间隔不会因为修改系统时间而受影响的场景
 */
+#if defined(WIN32)
 #include <sdkddkver.h>
+#endif
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <map>
 #include <boost/asio.hpp>
 #include <boost/asio/high_resolution_timer.hpp >
 #include <boost/asio/steady_timer.hpp >
 #include <boost/asio/system_timer.hpp >
 
-const float timer_version = 1.0f;//标记计时器的版本
-
+const float timer_version = 2.0f;//标记计时器的版本
+typedef std::function<void(__int64, __int64)> HeartbeatCallback;
+typedef std::function<void()> CloseCallBack;
 enum eTType
 {
     eTType_sdy = 0,
     eTType_sys,
     eTType_hr,
     eTType_dline,
+    eTType_max
 };
 
-typedef std::function<void()> timer_cb;
 class timers
 {
+private:
+    class ActiveTimer
+    {
+    public:
+        void timeout();
+        ActiveTimer()
+        {
+            index_ = 0;
+            ttype_ = eTType_max;
+            hb_cb_ = nullptr;
+            interval_ = 0;
+            persist_ = false;
+            timer_.sdy_timer_ = nullptr;
+            close_cb_ = nullptr;
+            timers_ = nullptr;
+            running_ = false;
+        }
+        ~ActiveTimer()
+        {
+            clearTimer();
+        }
+        void clearTimer() {
+            if (timer_.sdy_timer_)
+            {
+                delete timer_.sdy_timer_;
+                timer_.sdy_timer_ = nullptr;
+            }
+        }
+        union
+        {
+            boost::asio::steady_timer* sdy_timer_;
+            boost::asio::system_timer* sys_timer_;
+            boost::asio::high_resolution_timer* hr_timer_;
+            boost::asio::deadline_timer* deadline_timer_;
+        } timer_;
+        int       index_;
+        eTType    ttype_;
+        HeartbeatCallback hb_cb_;
+        CloseCallBack     close_cb_;
+        __int64   interval_;
+        __int64   start_;
+        bool      persist_;
+        timers*   timers_;
+        bool      running_;
+    };
 public:
-    timers(eTType type = eTType::eTType_sdy);
+    timers();
     ~timers();
 
-    static timers* create(eTType _type = eTType::eTType_sdy);
-    void setcb(timer_cb _cb);
-    bool addtimer();
-    void stop();
+    static timers* create();
+    bool addtimer(HeartbeatCallback pHeartbeatCallback, __int64 interval, eTType type,bool ifpersist,bool forcerun = false);
+    void stop();    
+    void test_run();
+    void runtimer(ActiveTimer* pATimer,__int64 now_time_);
+    void removetimer(int index);
+    void start();
+    void run();
     void timeout();
-    void run(bool _mult, bool async);
-    void runtimer();
+    void tout(__int64 nTime, __int64 sTime);
 private:
-    boost::asio::io_service io_;
-    boost::asio::steady_timer* sdy_timer_;
-    boost::asio::system_timer* sys_timer_;
-    boost::asio::high_resolution_timer* hr_timer_;
-    boost::asio::deadline_timer* deadline_timer_;
-    int count_;
-    eTType ttype_;
-    bool async_;
+    boost::asio::io_service      io_;
+    std::map<int,ActiveTimer*>   mapActiveTimers;
+    int                          activeTimer_idx_;
 };
-
+extern void show_current_time(const char* _str, eTType _type);
 
 #endif // !_TIMERS_H_
