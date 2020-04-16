@@ -29,6 +29,7 @@ extern void scoped_ptr_test();
 extern void shaded_ptr_test();
 extern void scoped_array_test();
 extern void weak_ptr_test();
+extern void unique_ptr_test();
 #endif // _SMART_PTR_TEST_H_
 
 

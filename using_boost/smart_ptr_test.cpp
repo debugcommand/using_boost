@@ -51,7 +51,26 @@ void auto_ptr_test3() {
 }
 
 
-//boost::scoped_ptr可以方便的管理单个堆内存对象,独享所有权,auto_ptr被完美替代
+//std::unique_ptr,管理单个堆内存对象,独享所有权,与auto_ptr类似，没有重载 operator=，更安全而已，用法基本一致
+void unique_ptr_test() {
+    std::unique_ptr<smart_ptr_test> unique_p(new smart_ptr_test(1));
+    if (unique_p.get()){
+        unique_p->print_();
+        unique_p.get()->info_ = "Addition";
+        unique_p->print_();
+        (*unique_p).info_ += " other";
+        unique_p->print_();
+        //smart_ptr_test* p = unique_p.release();//释放所有权 
+        std::unique_ptr<smart_ptr_test> unique_p2;
+        //unique_p2 = unique_p;        // error:scoped_ptr 没有重载 operator=，不会导致所有权转移
+        unique_p2 = std::move(unique_p); //所有权转移(通过移动语义)，unique_p所有权转移后，变成“空指针” 
+        unique_p2.reset(unique_p.release());	//所有权转移
+        unique_p2 = nullptr;//显式销毁所指对象，同时智能指针变为空指针。与unique_p2.reset()等价
+    }
+}
+
+
+//boost::scoped_ptr管理单个堆内存对象,独享所有权,auto_ptr被完美替代
 void scoped_ptr_test() {
     boost::scoped_ptr<smart_ptr_test> pAPTR(new smart_ptr_test(1));
     if (pAPTR.get()) {
