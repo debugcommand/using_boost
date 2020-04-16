@@ -1,5 +1,6 @@
 ﻿#include "timers.h"
 #include "LogicActor.h"
+#include "smart_ptr_test.h"
 #if defined(WIN32)
 #include <windows.h>
 #endif
@@ -38,6 +39,13 @@ int main(int argc, char** argv)
     {
         LogicActor* pActor = new LogicActor();
         pActor->Start();
+        for (; ;)
+        {
+            Sleep(1);
+        }
+    }
+    else if (strcmp(platform, "-spt") == 0) {
+        auto_ptr_test3();
         for (; ;)
         {
             Sleep(1);
