@@ -86,7 +86,7 @@ public:
     static timers* create();
     bool addtimer(HeartbeatCallback pHeartbeatCallback, __int64 interval, eTType type,bool ifpersist,bool forcerun = false);
     void stop();    
-    void test_run();
+    static void test_run(timers* pT);
     void runtimer(ActiveTimer* pATimer,__int64 now_time_);
     void removetimer(int index);
     void start();
