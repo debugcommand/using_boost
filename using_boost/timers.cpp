@@ -1,7 +1,6 @@
 #include "timers.h"
 #include <ctime>
 #include <iomanip>
-#include <boost/date_time/posix_time/posix_time.hpp> 
 
 const int span_time = 5000; //º‰∏Ù ±º‰ ms
 static boost::posix_time::ptime sInitTime(boost::posix_time::microsec_clock::universal_time());

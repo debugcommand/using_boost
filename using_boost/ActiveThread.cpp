@@ -20,6 +20,9 @@ ActiveThread::ActiveThread():thread_buffer_(1024*1024,1024),callback_(nullptr),b
 
 ActiveThread::~ActiveThread()
 {
+    if (timers_)
+        delete timers_;
+    timers_ = nullptr;
 }
 
 void ActiveThread::Start()

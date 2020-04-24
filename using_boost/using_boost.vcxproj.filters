@@ -31,10 +31,13 @@
       <Filter>methods</Filter>
     </ClCompile>
     <ClCompile Include="LogicActor.cpp">
-      <Filter>源文件</Filter>
+      <Filter>methods</Filter>
     </ClCompile>
     <ClCompile Include="smart_ptr_test.cpp">
-      <Filter>源文件</Filter>
+      <Filter>methods</Filter>
+    </ClCompile>
+    <ClCompile Include="Logging.cpp">
+      <Filter>methods</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,9 +46,6 @@
     </ClInclude>
     <ClInclude Include="ActiveThread.h">
       <Filter>methods</Filter>
-    </ClInclude>
-    <ClInclude Include="LogicActor.h">
-      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="inc\circular_buffer.h">
       <Filter>inc</Filter>
@@ -56,8 +56,14 @@
     <ClInclude Include="inc\thread_buffer.h">
       <Filter>inc</Filter>
     </ClInclude>
+    <ClInclude Include="LogicActor.h">
+      <Filter>methods</Filter>
+    </ClInclude>
     <ClInclude Include="smart_ptr_test.h">
-      <Filter>头文件</Filter>
+      <Filter>methods</Filter>
+    </ClInclude>
+    <ClInclude Include="Logging.h">
+      <Filter>methods</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

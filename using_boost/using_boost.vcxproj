@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)..\library\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -162,6 +162,7 @@ xcopy/AFRSY "$(TargetPath)" "$(ProjectDir)..\bin\"
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActiveThread.cpp" />
+    <ClCompile Include="Logging.cpp" />
     <ClCompile Include="LogicActor.cpp" />
     <ClCompile Include="smart_ptr_test.cpp" />
     <ClCompile Include="timers.cpp" />
@@ -172,6 +173,7 @@ xcopy/AFRSY "$(TargetPath)" "$(ProjectDir)..\bin\"
     <ClInclude Include="inc\circular_buffer.h" />
     <ClInclude Include="inc\realbuffer.h" />
     <ClInclude Include="inc\thread_buffer.h" />
+    <ClInclude Include="Logging.h" />
     <ClInclude Include="LogicActor.h" />
     <ClInclude Include="smart_ptr_test.h" />
     <ClInclude Include="timers.h" />

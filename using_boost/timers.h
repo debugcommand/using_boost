@@ -19,6 +19,7 @@
 #include <boost/asio/high_resolution_timer.hpp >
 #include <boost/asio/steady_timer.hpp >
 #include <boost/asio/system_timer.hpp >
+#include <boost/date_time/posix_time/posix_time.hpp> 
 
 const float timer_version = 2.0f;//标记计时器的版本
 typedef std::function<void(__int64, __int64)> HeartbeatCallback;
@@ -56,11 +57,48 @@ private:
             clearTimer();
         }
         void clearTimer() {
-            if (timer_.sdy_timer_)
+            switch (ttype_)
             {
-                delete timer_.sdy_timer_;
-                timer_.sdy_timer_ = nullptr;
+            case eTType_sdy:
+            {
+                if (timer_.sdy_timer_)
+                {
+                    delete timer_.sdy_timer_;
+                    timer_.sdy_timer_ = nullptr;
+                }
+            }   
+            return;
+            case eTType_sys:
+            {
+                if (timer_.sys_timer_)
+                {
+                    delete timer_.sys_timer_;
+                    timer_.sys_timer_ = nullptr;
+                }
             }
+            return;
+            case eTType_hr:
+            {
+                if (timer_.hr_timer_)
+                {
+                    delete timer_.hr_timer_;
+                    timer_.hr_timer_ = nullptr;
+                }
+            }
+            return;
+            case eTType_dline:
+            {
+                if (timer_.deadline_timer_)
+                {
+                    delete timer_.deadline_timer_;
+                    timer_.deadline_timer_ = nullptr;
+                }
+            }
+            return;
+            default:
+                return;
+            }
+
         }
         union
         {
