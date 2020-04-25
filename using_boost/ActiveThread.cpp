@@ -68,7 +68,7 @@ void ActiveThread::Run()
         Consume();
         if (timers_)
         {
-            timers_->run();
+            timers_->run_once();
         }
         Sleep(1);
     }

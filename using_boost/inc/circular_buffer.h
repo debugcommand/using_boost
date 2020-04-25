@@ -42,10 +42,11 @@ public:
         }
     }
 
+    //剩余容量
     size_t capacity() const {
-        return m_nBufSize;
+        return m_nBufSize - size();
     }
-	
+
     char* data() {
 		return m_pBuf;
 	}

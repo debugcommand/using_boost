@@ -43,12 +43,12 @@ int main(int argc, char** argv)
         int count = 0;
         LOG(pLoggin, LOG_INFO, "log info testing[%d]!", count++);
         LOG(pLoggin, LOG_DEBUG, "log debug testing[%d]!", count++);
-        LOG(pLoggin, LOG_WARNING, "log warning testing[%d]!", count++);
+        LOG(pLoggin, LOG_WARNNING, "log warnning testing[%d]!", count++);
         LOG(pLoggin, LOG_ERROR, "log error testing[%d]!", count++);
         for (; ;)
         {
             Sleep(1);
-        }
+        }   
     }
     return 0;
 }

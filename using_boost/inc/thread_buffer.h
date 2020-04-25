@@ -59,6 +59,10 @@ public:
         return cbuffer_.read(data, length) > 0;
     }
     char* GetData(size_t length) {
+        if (curLenght_ < length) {//如果临时buff比写入的小了       
+            curLenght_ = length;
+            tempdata_ = (char*)realloc(tempdata_, curLenght_);
+        }
         if (cbuffer_.read(tempdata_, length) > 0)
             return tempdata_;
         return nullptr;
@@ -72,10 +76,17 @@ public:
         return (buffer_base*)tempdata_;
     }
     //
+    size_t capacity() const {
+        return cbuffer_.capacity();
+    }
+    size_t size() const {
+        return cbuffer_.size();
+    }
+    void clear(){
+        memset(tempdata_,0, curLenght_);
+    }
 private:
     CircularBuffer cbuffer_;
-    int		       type_;
-    int		       threadid_;
     char*	       tempdata_;
     int            curLenght_;
 };

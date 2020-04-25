@@ -212,6 +212,11 @@ void timers::run() {
     io_.run();
 }
 
+void timers::run_once()
+{
+    io_.run_one();
+}
+
 void timers::test_run(timers* pT) {
     pT->addtimer(std::bind(&timers::tout, pT, std::placeholders::_1, std::placeholders::_2), 3000, eTType_dline, true,true);
     while (1)

@@ -22,8 +22,8 @@
 #include <boost/date_time/posix_time/posix_time.hpp> 
 
 const float timer_version = 2.0f;//标记计时器的版本
-typedef std::function<void(__int64, __int64)> HeartbeatCallback;
-typedef std::function<void()> CloseCallBack;
+using HeartbeatCallback = std::function<void(__int64, __int64)>;
+using CloseCallBack = std::function<void()>;
 enum eTType
 {
     eTType_sdy = 0,
@@ -129,6 +129,7 @@ public:
     void removetimer(int index);
     void start();
     void run();
+    void run_once();
     void timeout();
     void tout(__int64 nTime, __int64 sTime);
 private:
