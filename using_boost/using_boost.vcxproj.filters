@@ -33,11 +33,11 @@
     <ClCompile Include="LogicActor.cpp">
       <Filter>methods</Filter>
     </ClCompile>
-    <ClCompile Include="smart_ptr_test.cpp">
-      <Filter>methods</Filter>
-    </ClCompile>
     <ClCompile Include="Logging.cpp">
       <Filter>methods</Filter>
+    </ClCompile>
+    <ClCompile Include="smart_ptr_test.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,11 +59,11 @@
     <ClInclude Include="LogicActor.h">
       <Filter>methods</Filter>
     </ClInclude>
-    <ClInclude Include="smart_ptr_test.h">
-      <Filter>methods</Filter>
-    </ClInclude>
     <ClInclude Include="Logging.h">
       <Filter>methods</Filter>
+    </ClInclude>
+    <ClInclude Include="smart_ptr_test.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

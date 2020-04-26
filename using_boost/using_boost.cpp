@@ -20,6 +20,8 @@ int main(int argc, char** argv)
     {//timers
         timers* pTimer = timers::create();
         pTimer->test_run(pTimer);
+
+        delete pTimer;
     }
     else if (strcmp(platform, "-at") == 0)
     {
@@ -41,14 +43,27 @@ int main(int argc, char** argv)
         Logging* pLoggin = new Logging();
         pLoggin->InitLoggin();
         int count = 0;
-        LOG(pLoggin, LOG_INFO, "log info testing[%d]!", count++);
-        LOG(pLoggin, LOG_DEBUG, "log debug testing[%d]!", count++);
-        LOG(pLoggin, LOG_WARNNING, "log warnning testing[%d]!", count++);
-        LOG(pLoggin, LOG_ERROR, "log error testing[%d]!", count++);
+        auto flog = [=](int& count) {
+            LOG(pLoggin, LOG_INFO, "log info testing[%d]!", count++);
+            LOG(pLoggin, LOG_DEBUG, "log debug testing[%d]!", count++);
+            LOG(pLoggin, LOG_WARNNING, "log warnning testing[%d]!", count++);
+            LOG(pLoggin, LOG_ERROR, "log error testing[%d]!", count++); };
+        //flog(count);
+        __int64 cuT = now_time(eTType_dline);
+        __int64 runT = cuT;
         for (; ;)
         {
+            cuT = now_time(eTType_dline);
+            if (cuT - runT > 5000) {
+                flog(count);
+                runT = cuT;
+            }
             Sleep(1);
         }   
+    }
+    else if (strcmp(platform, "-lambda") == 0) {
+        std::function<int(void)> foo = std::bind([](int a) { return a; }, 123);
+        std::cout << foo() << std::endl;
     }
     return 0;
 }

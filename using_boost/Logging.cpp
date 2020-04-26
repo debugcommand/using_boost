@@ -53,7 +53,7 @@ Logging::Logging()
 
 Logging::~Logging()
 {
-    for (INT32 i = 0; i < LOG_MAX; ++i) {
+    for (auto i = 0; i < LOG_MAX; ++i) {
         if (nullptr != files_[i]) {
             fclose(files_[i]);
         }
@@ -84,7 +84,6 @@ void   Logging::InitLoggin()
         if (n32Res != 0) {
             printf("Createfile(%d) failed", i);
         }
-
         buffers_[i] = new thread_buffer(1024*10,1024);
     }
     //

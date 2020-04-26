@@ -128,8 +128,8 @@ public:
     void runtimer(ActiveTimer* pATimer,__int64 now_time_);
     void removetimer(int index);
     void start();
-    void run();
-    void run_once();
+    void run(bool once = true);        //×èÈû
+    void run_poll(bool once = true);   //·Ç×èÈû
     void timeout();
     void tout(__int64 nTime, __int64 sTime);
 private:
@@ -138,5 +138,5 @@ private:
     int                          activeTimer_idx_;
 };
 extern void show_current_time(const char* _str, eTType _type);
-
+extern __int64 now_time(eTType _type);
 #endif // !_TIMERS_H_

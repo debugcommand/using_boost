@@ -70,9 +70,11 @@ timers::timers()
 
 timers::~timers()
 {
-    for (auto itr = mapActiveTimers.begin(); itr != mapActiveTimers.end(); itr++)
-    {
-        delete itr->second;
+    for (auto itr : mapActiveTimers) {
+        if (itr.second)
+        {
+            delete itr.second;
+        }        
     }
     mapActiveTimers.clear();
 }
@@ -208,20 +210,34 @@ void timers::start()
     }
 }
 
-void timers::run() {
-    io_.run();
+void timers::run(bool once) {
+    if (once) {
+        io_.run_one();
+    }
+    else
+    {
+        io_.run();
+    }
 }
 
-void timers::run_once()
-{
-    io_.run_one();
+void timers::run_poll(bool once) {
+    if (once)
+    {
+        io_.poll_one();
+    }
+    else
+    {
+        io_.poll();
+    }
 }
 
+static int run_time = 10000 ;
 void timers::test_run(timers* pT) {
     pT->addtimer(std::bind(&timers::tout, pT, std::placeholders::_1, std::placeholders::_2), 3000, eTType_dline, true,true);
-    while (1)
+    while (run_time > 0)
     {
-        pT->run();
-        Sleep(1);
+        pT->run_poll(false);
+        std::cout << "run_time:" << run_time << std::endl;
+        run_time--;
     }
 }

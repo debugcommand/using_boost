@@ -68,7 +68,8 @@ void ActiveThread::Run()
         Consume();
         if (timers_)
         {
-            timers_->run_once();
+            //timers_->run_once();
+            timers_->run_poll();
         }
         Sleep(1);
     }
@@ -76,7 +77,7 @@ void ActiveThread::Run()
 
 void ActiveThread::Consume() {
     boost::mutex::scoped_lock lock(mutex_);
-    buffer_base* pBuffer = thread_buffer_.GetBuffer();
+    buffer_base* pBuffer = thread_buffer_.GetBuffer();   
     while (pBuffer) {
         callback_(pBuffer);
         pBuffer = thread_buffer_.GetBuffer();
